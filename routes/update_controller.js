@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
-
+const algorithm = 'aes-256-ctr';
+const my_secret = 'd6F3Efeq';
 
 const knex = require('../helpers/knex');
 
@@ -18,11 +19,14 @@ router.put('/v1/updatecontroller', async(req, res, next) => {
 
     const result = await knex("public.controller_password")
         .where('mac', data.input.query.mac)
-        .update({mac: req.body.mac, username: encrypt_username, password: encrypt_password})
-    console.log(result)
+        .update({
+            mac: req.body.mac, 
+            username: encrypt_username, 
+            password: encrypt_password})
+   
     res
         .status(201)
-        .send({message: "UPdate Controller"})
+        .send({message: "Update Controller"})
 })
 
 const encrypt = (text) => {

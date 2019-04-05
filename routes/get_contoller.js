@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
-
+const Joi = require('joi');
+const algorithm = 'aes-256-ctr';
+const my_secret = 'd6F3Efeq';
 const knex = require('../helpers/knex')
 router.get('/v1/getcontroller', async (req, res, next) => {
     try {
@@ -20,6 +22,8 @@ router.get('/v1/getcontroller', async (req, res, next) => {
         const decrypt_username = decrypt(result.username);
         const decrypt_password = decrypt(result.password);
         console.log(decrypt_username,decrypt_password);
+
+
 
         res
             .status(201)
@@ -40,5 +44,13 @@ const decrypt = (text) => {
     var dec = decipher.update(text, 'hex', 'utf8')
     dec += decipher.final('utf8');
     return dec;
+}
+
+data_valid = async(data)=>{
+const schema = Joi.object().keys({
+    username: Joi.string().alphanum().min(3).max(30).required(),
+    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/),
+    mac: Joi.string()
+})
 }
 module.exports = router;
