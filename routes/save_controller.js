@@ -1,27 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
-const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 
 
 const knex = require('../helpers/knex');
 
-router.post('/v1/savecontroller', verifyToken, async(req, res, next) => {
+router.post('/v1/savecontroller',verifyToken, async(req, res, next) => {
    
 
     try {
         const encrypt_username = encrypt(req.body.username);
         const encrypt_password = encrypt(req.body.password);
-
+        const mac = req.body.mac
         const result = await knex("public.controller_password")
             .insert({mac: req.body.mac, username: encrypt_username, password: encrypt_password})
             .returning('*')
-
+        if (mac  ==  '') {
+        res.send({
+            status:"UNSUCCESS",
+            message:"Enter Valid Data"})
+        
+    } else {
+        
         jwt.verify(req.token, my_secret, (err, authData) => {
-            console.log(authData)
             if (err) {
-                res.sendStatus(403);
+
+                res.sendStatus(403).send({
+                    message:"Invalide Token"
+                });
 
             } else {
                 return res.send({
@@ -30,6 +37,9 @@ router.post('/v1/savecontroller', verifyToken, async(req, res, next) => {
                     authData})
             }
         })
+        
+    }
+
 
     } catch (error) {
 
@@ -44,6 +54,7 @@ const encrypt = (text) => {
     crypted += cipher.final('hex');
     return crypted;
 }
+
 
 router.post('/v1/authenticate', async(req, res, next) => {
 

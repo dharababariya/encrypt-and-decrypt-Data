@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
 
-
 const knex = require('../helpers/knex');
 
 router.put('/v1/updatecontroller', async(req, res, next) => {
