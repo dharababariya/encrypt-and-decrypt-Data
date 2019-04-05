@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
-const algorithm = 'aes-256-ctr';
-const my_secret = 'd6F3Efeq';
+
 
 const knex = require('../helpers/knex');
 
