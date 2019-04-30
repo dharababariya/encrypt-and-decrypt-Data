@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
 const Joi = require('joi');
-;
+
 const knex = require('../helpers/knex')
 router.get('/v1/getcontroller', async (req, res, next) => {
     try {
